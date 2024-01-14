@@ -5,7 +5,15 @@ class ToDoListApp:
     def __init__(self, root):
         self.root = root
         self.root.title("To-Do List App")
-        self.root.geometry("400x300")  # Set the initial size of the window
+
+        # Calculate the position to center the window
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        x_position = (screen_width - 500) // 2
+        y_position = (screen_height - 400) // 2
+
+        # Set the initial size and position of the window
+        self.root.geometry(f"500x400+{x_position}+{y_position}")
 
         self.tasks = []
 
