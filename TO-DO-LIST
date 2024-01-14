@@ -1,52 +1,66 @@
-# Define an empty list to store tasks
-tasks = []
+import tkinter as tk
+from tkinter import messagebox
 
-# Function to add a task
-def add_task():
-    task_name = input("Enter task name: ")
-    task_description = input("Enter task description: ")
-    tasks.append({"Task Name": task_name, "Description": task_description})
-    print("Task added successfully!")
+class ToDoListApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("To-Do List App")
+        self.root.geometry("400x300")  # Set the initial size of the window
 
-# Function to delete a task
-def delete_task():
-    task_name = input("Enter the task name you want to delete: ")
-    found = False
-    for task in tasks:
-        if task["Task Name"] == task_name:
-            tasks.remove(task)
-            found = True
-            print("Task deleted successfully!")
-            break
-    if not found:
-        print("Task not found.")
+        self.tasks = []
 
-# Function to display all tasks
-def show_tasks():
-    if tasks:
-        print("Tasks:")
-        for idx, task in enumerate(tasks, start=1):
-            print(f"{idx}. {task['Task Name']}: {task['Description']}")
-    else:
-        print("No tasks available.")
+        # Create and set up the listbox
+        self.task_listbox = tk.Listbox(root, selectmode=tk.SINGLE, width=40, height=10, bg='#E6E6FA')  # Light purple background
+        self.task_listbox.pack(pady=10)
 
-# Main menu loop
-while True:
-    print("\nTo-Do List Menu:")
-    print("1. Add your Task")
-    print("2. Delete your Task")
-    print("3. Show your Tasks")
-    print("4. For Exit")
-    choice = input("Enter your choice (1-4): ")
+        # Create and set up entry widget
+        self.task_entry = tk.Entry(root, width=40)
+        self.task_entry.pack(pady=5)
 
-    if choice == "1":
-        add_task()
-    elif choice == "2":
-        delete_task()
-    elif choice == "3":
-        show_tasks()
-    elif choice == "4":
-        print("Thank You! Exiting...")
-        break
-    else:
-        print("Sorry!,Invalid choice. Please enter a valid option.")
+        # Create buttons with colorful appearance
+        self.add_button = tk.Button(root, text="Add Task", command=self.add_task, bg='#98FB98')  # Light green background
+        self.add_button.pack(pady=5)
+
+        self.delete_button = tk.Button(root, text="Delete Task", command=self.delete_task, bg='#FF6347')  # Tomato color
+        self.delete_button.pack(pady=5)
+
+        self.exit_button = tk.Button(root, text="Exit", command=self.root.destroy, bg='#FFD700')  # Gold color
+        self.exit_button.pack(pady=5)
+
+        # Load tasks from file
+        self.load_tasks()
+
+    def add_task(self):
+        task = self.task_entry.get()
+        if task:
+            self.tasks.append(task)
+            self.task_listbox.insert(tk.END, task)
+            self.task_entry.delete(0, tk.END)  # Clear the entry widget
+            self.save_tasks()
+
+    def delete_task(self):
+        selected_task_index = self.task_listbox.curselection()
+        if selected_task_index:
+            selected_task_index = int(selected_task_index[0])
+            del self.tasks[selected_task_index]
+            self.task_listbox.delete(selected_task_index)
+            self.save_tasks()
+
+    def save_tasks(self):
+        with open("tasks.txt", "w") as file:
+            for task in self.tasks:
+                file.write(task + "\n")
+
+    def load_tasks(self):
+        try:
+            with open("tasks.txt", "r") as file:
+                self.tasks = [line.strip() for line in file.readlines()]
+                for task in self.tasks:
+                    self.task_listbox.insert(tk.END, task)
+        except FileNotFoundError:
+            pass  # If the file doesn't exist yet, it's fine.
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ToDoListApp(root)
+    root.mainloop()
