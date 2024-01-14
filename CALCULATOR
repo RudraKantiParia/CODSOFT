@@ -1,0 +1,33 @@
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    return a / b if b != 0 else "Cannot divide by zero"
+
+# User interaction
+print("Welcome to the calculator!")
+print("Operations available:")
+print("1. For Addition")
+print("2. For Subtraction")
+print("3. For Multiplication")
+print("4. For Division")
+
+operation = input("Choose an operation (1/2/3/4): ")
+
+if operation in ('1', '2', '3', '4'):
+    num1 = float(input("Enter first number: "))
+    num2 = float(input("Enter second number: "))
+
+    if operation == '1':
+        print(f"Result of {num1} + {num2} = {add(num1, num2)}")
+    elif operation == '2':
+        print(f"Result of {num1} - {num2} = {subtract(num1, num2)}")
+    elif operation == '3':
+        print(f"Result of {num1} * {num2} = {multiply(num1, num2)}")
+    elif operation == '4':
+        print(f"Result of {num1} / {num2} = {divide(num1, num2)}")
+else:
+    print("Sorry! Invalid operation. Please choose from 1 to 4.")
